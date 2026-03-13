@@ -7,21 +7,62 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
+
     <BrowserRouter>
-      <Routes>
 
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/profile" element={<Profile />} />
+        <Routes>
 
-      </Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <Products />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+        </Routes>
+
+      </div>
+
     </BrowserRouter>
+
   );
 }
 

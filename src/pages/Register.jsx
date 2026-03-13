@@ -1,96 +1,90 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/auth.css";
+import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 export default function Register() {
 
-  const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const [formData,setFormData] = useState({
-    name:"",
-    email:"",
-    password:""
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: ""
   });
 
-  const handleChange = (e) =>{
-    const {name,value} = e.target;
+  const handleChange = (e) => {
+
+    const { name, value } = e.target;
 
     setFormData({
       ...formData,
-      [name]:value
+      [name]: value
     });
   };
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = (e) => {
+
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const userExists = users.find(
-      (user)=> user.email === formData.email
-    );
-
-    if(userExists){
-      alert("User already exists!");
-      return;
-    }
-
-    users.push(formData);
-
-    localStorage.setItem("users",JSON.stringify(users));
-
-    alert("Registration Successful");
-
-    navigate("/");
+    register(formData);
   };
 
   return (
-    <div className="auth-container">
 
-      <div className="auth-card">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
 
-        <h2>Register</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md w-80">
 
-        <form onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
           <input
-            className="auth-input"
             type="text"
             name="name"
             placeholder="Enter Name"
             value={formData.name}
             onChange={handleChange}
+            className="border p-2 rounded"
             required
           />
 
           <input
-            className="auth-input"
             type="email"
             name="email"
             placeholder="Enter Email"
             value={formData.email}
             onChange={handleChange}
+            className="border p-2 rounded"
             required
           />
 
           <input
-            className="auth-input"
             type="password"
             name="password"
             placeholder="Enter Password"
             value={formData.password}
             onChange={handleChange}
+            className="border p-2 rounded"
             required
           />
 
-          <button className="auth-btn" type="submit">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          >
             Register
           </button>
 
         </form>
 
-        <p className="auth-link">
-          Already have an account? <Link to="/">Login</Link>
+        <p className="text-sm mt-3 text-center">
+
+          Already have an account?{" "}
+          <Link to="/" className="text-blue-600">
+            Login
+          </Link>
+
         </p>
 
       </div>

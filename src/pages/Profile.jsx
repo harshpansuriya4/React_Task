@@ -1,104 +1,131 @@
 import { useState, useEffect } from "react";
-import "../styles/profile.css";
+import Navbar from "../components/Navbar";
+import useAuth from "../hooks/useAuth";
 
 export default function Profile() {
 
-    const [showPassword, setShowPassword] = useState(false);
+  const { getUser } = useAuth();
 
-    const [user, setUser] = useState({
-        name: "",
-        email: "",
-        password: ""
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+
+  useEffect(() => {
+
+    const storedUser = getUser();
+
+    if (storedUser) {
+      setUser(storedUser);
+    }
+
+  }, []);
+
+  const handleChange = (e) => {
+
+    const { name, value } = e.target;
+
+    setUser({
+      ...user,
+      [name]: value
+    });
+  };
+
+  const handleSave = (e) => {
+
+    e.preventDefault();
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    users = users.map((u) => {
+      if (u.email === user.email) {
+        return user;
+      }
+      return u;
     });
 
-    useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
 
-        const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
 
-        if (storedUser) {
-            setUser(storedUser);
-        }
+    alert("Profile Updated Successfully");
+  };
 
-    }, []);
+  return (
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-        setUser({
-            ...user,
-            [name]: value
-        });
-    };
+      <Navbar />
 
-    const handleSave = (e) => {
-        e.preventDefault();
+      <div className="flex justify-center items-center min-h-[80vh]">
 
-        // get all users
-        let users = JSON.parse(localStorage.getItem("users")) || [];
+        <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-lg p-8 w-96">
 
-        // update the correct user
-        users = users.map((u) => {
-            if (u.email === user.email) {
-                return user;
-            }
-            return u;
-        });
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            User Profile
+          </h2>
 
-        // save updated users list
-        localStorage.setItem("users", JSON.stringify(users));
+          <form
+            onSubmit={handleSave}
+            className="flex flex-col gap-4"
+          >
 
-        // update logged in user
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
+            <input
+              type="text"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+              placeholder="Name"
+              className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
+            />
 
-        alert("Profile Updated Successfully");
-    };
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
+            />
 
-    return (
+            <div className="flex gap-2">
 
-        <div className="profile-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={user.password}
+                onChange={handleChange}
+                className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
+              />
 
-            <div className="profile-card">
-
-                <h2>User Profile</h2>
-
-                <form onSubmit={handleSave}>
-
-                    <input
-                        type="text"
-                        name="name"
-                        value={user.name}
-                        onChange={handleChange}
-                        placeholder="Name"
-                    />
-
-                    <input
-                        type="email"
-                        name="email"
-                        value={user.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                    />
-
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={user.password}
-                        onChange={handleChange}
-                    />
-
-                    <button type="button" onClick={() => setShowPassword(!showPassword)}>
-                        {showPassword ? "Hide" : "Show"}
-                    </button>
-
-                    <button type="submit">
-                        Save Changes
-                    </button>
-
-                </form>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-white"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
 
             </div>
 
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
+
+          </form>
+
         </div>
 
-    );
+      </div>
+
+    </div>
+
+  );
 }
+

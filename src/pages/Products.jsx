@@ -1,71 +1,72 @@
 import { useEffect, useState } from "react";
-import "../styles/products.css";
+import ProductCard from "../components/ProductCard";
+import Loader from "../components/Loader";
+import Navbar from "../components/Navbar";
 
 export default function Products() {
 
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetch("https://fakestoreapi.com/products")
-            .then((res) => res.json())
-            .then((data) => {
-                setProducts(data);
-                setLoading(false);
-            });
-    }, []);
+  useEffect(() => {
 
-    const addToCart = (product) => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      });
 
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  }, []);
 
-        const existing = cart.find(item => item.id === product.id);
+  const addToCart = (product) => {
 
-        if (existing) {
-            existing.quantity += 1;
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+    const existing = cart.find((item) => item.id === product.id);
 
-        alert("Added to cart");
-    };
-
-    if (loading) {
-        return <h2 style={{ textAlign: "center" }}>Loading products...</h2>;
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
     }
 
-    return (
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-        <div className="products-container">
+    alert("Added to cart");
+  };
 
-            <h1>Product Listing</h1>
+  if (loading) return <Loader />;
 
-            <div className="product-grid">
+  return (
 
-                {products.map((product) => (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-                    <div key={product.id} className="product-card">
+      <Navbar />
 
-                        <img src={product.image} alt={product.title} />
+      <div className="max-w-6xl mx-auto p-6">
 
-                        <h3>{product.title}</h3>
+        <h1 className="text-3xl font-bold mb-6">
+          Product Listing
+        </h1>
 
-                        <p className="price">${product.price}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-                        <button onClick={() => addToCart(product)}>
-                            Add to Cart
-                        </button>
+          {products.map((product) => (
 
-                    </div>
+            <ProductCard
+              key={product.id}
+              product={product}
+              addToCart={addToCart}
+            />
 
-                ))}
-
-            </div>
+          ))}
 
         </div>
 
-    );
+      </div>
 
+    </div>
+
+  );
 }

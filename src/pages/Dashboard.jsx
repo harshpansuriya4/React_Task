@@ -1,101 +1,34 @@
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/dashboard.css";
-import "../styles/darkmode.css";
-import { useEffect } from "react";
+import Navbar from "../components/Navbar";
+import useAuth from "../hooks/useAuth";
 
 export default function Dashboard() {
 
-  const navigate = useNavigate();
+  const { getUser } = useAuth();
 
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
-
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    navigate("/");
-  };
-
-  useEffect(() => {
-
-    const darkMode = localStorage.getItem("darkMode");
-
-    if (darkMode === "true") {
-      document.body.classList.add("dark-mode");
-    }
-
-  }, []);
-
-  useEffect(() => {
-
-    const expiry = localStorage.getItem("sessionExpiry");
-
-    if (!expiry || Date.now() > expiry) {
-
-      alert("Session expired. Please login again.");
-
-      localStorage.removeItem("loggedInUser");
-      localStorage.removeItem("sessionExpiry");
-
-      navigate("/");
-    }
-
-  }, []);
-
-  const toggleDarkMode = () => {
-
-    document.body.classList.toggle("dark-mode");
-
-    const isDark = document.body.classList.contains("dark-mode");
-
-    localStorage.setItem("darkMode", isDark);
-  };
+  const user = getUser();
 
   return (
 
-    <div>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-      {/* NAVBAR */}
-      <nav className="navbar">
+      <Navbar />
 
-        <div className="nav-logo">
-          E-Shop Dashboard
-        </div>
+      <div className="flex justify-center items-center mt-16">
 
-        <button onClick={toggleDarkMode}>
-          Dark Mode
-        </button>
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-96 text-center">
 
-        <div className="nav-links">
+          <h2 className="text-2xl font-bold mb-3 text-gray-800 dark:text-white">
+            Welcome {user?.name}
+          </h2>
 
-          <Link to="/dashboard">Dashboard</Link>
-
-          <Link to="/products">Products</Link>
-
-          <Link to="/cart">Cart</Link>
-
-          <Link to="/profile">Profile</Link>
-
-          <a href="#" onClick={handleLogout}>Logout</a>
-
-        </div>
-
-      </nav>
-
-
-      {/* DASHBOARD CONTENT */}
-      <div className="dashboard-container">
-
-        <div className="welcome-card">
-
-          <h2>Welcome {user?.name}</h2>
-
-          <p>This is your dashboard.</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            This is your dashboard.
+          </p>
 
         </div>
 
       </div>
 
     </div>
-
   );
-
 }
