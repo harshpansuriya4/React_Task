@@ -21,36 +21,28 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route
-            path="/dashboard"
-            element={
+          <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             }
           />
 
-          <Route
-            path="/products"
-            element={
+          <Route path="/products" element={
               <ProtectedRoute>
                 <Products />
               </ProtectedRoute>
             }
           />
 
-          <Route
-            path="/cart"
-            element={
+          <Route path="/cart" element={
               <ProtectedRoute>
                 <Cart />
               </ProtectedRoute>
             }
           />
 
-          <Route
-            path="/profile"
-            element={
+          <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
@@ -58,11 +50,8 @@ function App() {
           />
 
         </Routes>
-
       </div>
-
     </BrowserRouter>
-
   );
 }
 

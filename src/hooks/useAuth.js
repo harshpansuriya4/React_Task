@@ -1,16 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-const SESSION_TIME = 5 * 60 * 1000; // 5 minutes
+const SESSION_TIME = 5 * 60 * 1000;
 
 export default function useAuth() {
-
   const navigate = useNavigate();
 
-  // REGISTER USER
+
   const register = (formData) => {
-
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const userExists = users.find(
       (user) => user.email === formData.email
     );
@@ -21,21 +18,16 @@ export default function useAuth() {
     }
 
     users.push(formData);
-
     localStorage.setItem("users", JSON.stringify(users));
-
     alert("Registration Successful");
-
     navigate("/");
 
     return true;
   };
 
-  // LOGIN USER
+
   const login = (email, password) => {
-
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
     const validUser = users.find(
       (user) => user.email === email && user.password === password
     );
@@ -45,10 +37,10 @@ export default function useAuth() {
       return false;
     }
 
-    // Save logged user
+
     localStorage.setItem("loggedInUser", JSON.stringify(validUser));
 
-    // Create session expiry
+
     const sessionExpiry = Date.now() + SESSION_TIME;
     localStorage.setItem("sessionExpiry", sessionExpiry);
 
@@ -57,7 +49,6 @@ export default function useAuth() {
     return true;
   };
 
-  // LOGOUT USER
   const logout = () => {
 
     localStorage.removeItem("loggedInUser");
@@ -66,7 +57,7 @@ export default function useAuth() {
     navigate("/");
   };
 
-  // CHECK AUTHENTICATION
+
   const isAuthenticated = () => {
 
     const user = localStorage.getItem("loggedInUser");

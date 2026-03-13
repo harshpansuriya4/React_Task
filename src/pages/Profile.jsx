@@ -5,9 +5,7 @@ import useAuth from "../hooks/useAuth";
 export default function Profile() {
 
   const { getUser } = useAuth();
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -15,9 +13,7 @@ export default function Profile() {
   });
 
   useEffect(() => {
-
     const storedUser = getUser();
-
     if (storedUser) {
       setUser(storedUser);
     }
@@ -25,9 +21,7 @@ export default function Profile() {
   }, []);
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
-
     setUser({
       ...user,
       [name]: value
@@ -35,11 +29,8 @@ export default function Profile() {
   };
 
   const handleSave = (e) => {
-
     e.preventDefault();
-
     let users = JSON.parse(localStorage.getItem("users")) || [];
-
     users = users.map((u) => {
       if (u.email === user.email) {
         return user;
@@ -48,22 +39,16 @@ export default function Profile() {
     });
 
     localStorage.setItem("users", JSON.stringify(users));
-
     localStorage.setItem("loggedInUser", JSON.stringify(user));
-
     alert("Profile Updated Successfully");
   };
 
   return (
 
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-
       <Navbar />
-
       <div className="flex justify-center items-center min-h-[80vh]">
-
         <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg rounded-lg p-8 w-96">
-
           <h2 className="text-2xl font-bold mb-6 text-center">
             User Profile
           </h2>
@@ -117,13 +102,10 @@ export default function Profile() {
             >
               Save Changes
             </button>
-
+            
           </form>
-
         </div>
-
       </div>
-
     </div>
 
   );
